@@ -1,0 +1,63 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    --darker-background: lightgray;
+    font-family: Poppins, sans-serif;
+    margin: 0;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+    background: var(--darker-background);
+}
+
+header > * {
+    margin: 0 5px;
+}
+
+main {
+    margin: 20px;
+}
+
+select {
+    font-family: Poppins, sans-serif;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+pre {
+    font-family: "JetBrains Mono", monospace;
+    margin: 20px;
+    color: gray;
+    user-select: none;
+}
+
+footer {
+    background: var(--darker-background);
+    padding: 10px 20px;
+}
+
+.CodeMirror {
+    background: transparent !important;
+    font-family: "JetBrains Mono", monospace !important;
+    margin: 17px;
+}
+
+.correct {
+    color: green;
+}
+
+.incorrect {
+    color: red;
+    text-decoration: underline;
+}
+
+#timer {
+    transform: translateX(50%);
+}
