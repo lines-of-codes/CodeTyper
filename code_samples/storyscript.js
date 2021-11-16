@@ -6,6 +6,6 @@ samplelist.storyscript = [
     {
         "name": "What's your name?",
         "code": `string name = input("What's your name? > ")
-print("Hello, ", + name + "!")`
+print("Hello, " + name + "!")`
     }
 ]

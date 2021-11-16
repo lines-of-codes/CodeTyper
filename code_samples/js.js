@@ -16,6 +16,10 @@ console.log(a + b);`
     },
     {
         "name": "What's in the file? (Node.JS)",
-        "code": ``
+        "code": `const fs = require("fs");
+fs.readFile("./file.txt", "utf8", function(err, data) {
+    if (err) return console.log(err);
+    console.log(data);
+})`
     }
 ];
