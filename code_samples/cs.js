@@ -1,5 +1,10 @@
 samplelist.cs = [
     {
+        "name": "Highlighting Information",
+        "mime": "text/x-csharp",
+        "mode": "clike"
+    },
+    {
         "name": "Hello, world (New)",
         "code": `Console.WriteLine("Hello, world!");`
     },
@@ -7,7 +12,7 @@ samplelist.cs = [
         "name": "Hello, world (Old)",
         "code": `using System;
 
-class Application
+public class Application
 {
     public static void Main(string[] args)
     {
@@ -19,7 +24,7 @@ class Application
         "name": "What's your name?",
         "code": `using System;
 
-class Application
+public class Application
 {
     public static void Main(string[] args)
     {
@@ -34,11 +39,24 @@ class Application
         "code": `using System;
 using System.IO;
 
-class Application
+public class Application
 {
     public static void Main(string[] args)
     {
         Console.WriteLine(File.ReadAllText("file.txt"));
+    }
+}`
+    },
+    {
+        "name": "Roll the dice!",
+        "code": `using System;
+
+public class Application
+{
+    public static void Main(string[] args)
+    {
+        Console.WriteLine("Rolling the dice...");
+        Console.WriteLine($"You got: {new Random().Next(1, 7)}");
     }
 }`
     }

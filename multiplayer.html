@@ -1,42 +1,22 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width">
-	<!-- Primary Meta Tags -->
-    <title>CodeTyper - Measure how fast you can code!</title>
-    <meta name="title" content="CodeTyper - Measure how fast you can code!">
-    <meta name="description" content="CodeTyper! A small and simple web application to measures how fast can you type code.">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://codetyper.linesofcodes.repl.co/">
-    <meta property="og:title" content="CodeTyper - Measure how fast you can code!">
-    <meta property="og:description" content="CodeTyper! A small and simple web application to measures how fast can you type code.">
-    <meta property="og:image" content="">
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://codetyper.linesofcodes.repl.co/">
-    <meta property="twitter:title" content="CodeTyper - Measure how fast you can code!">
-    <meta property="twitter:description" content="CodeTyper! A small and simple web application to measures how fast can you type code.">
-    <meta property="twitter:image" content="">
-    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Poppins&display=swap" rel="stylesheet">
 	<link href="style.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://unpkg.com/codemirror@5.63.3/lib/codemirror.css">
     <script src="https://unpkg.com/codemirror@5.63.3/lib/codemirror.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://yetanotherwebsitedesigner.linesofcodes.repl.co/modal.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js" integrity="sha512-GMGzUEevhWh8Tc/njS0bDpwgxdCJLQBWG3Z2Ct+JGOpVnEmjvNx6ts4v6A2XJf1HOrtOsfhv3hBKpK9kE5z8AQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://yetanotherwebsitedesigner.linesofcodes.repl.co/js/modal.js" defer></script>
-    <script src="https://unpkg.com/petite-vue" defer init></script>
-    <script defer src="js/script.js"></script>
-    <script defer src="js/navbar.js" type="module"></script>
+    <script src="js/script.js" defer></script>
+    <script src="js/multiplayer.js" type="module" defer></script>
+    <title>Play Multiplayer - CodeTyper</title>
 </head>
-
 <body>
     <header id="pageHeader">
         <div>
@@ -46,7 +26,7 @@
     </header>
     <h1 id="timer">0</h1>
     <main id="maincontent">
-        <select v-on:change="changeLanguage" id="language">
+        <select id="language" style="display:none;">
             <option value="c">C</option>
             <option value="cpp">C++</option>
             <option value="cs">C#</option>
@@ -65,13 +45,16 @@
             <option value="ts">TypeScript</option>
             <option value="cobol">Cobol</option>
         </select>
-        <select v-on:change="onSampleChoiceChange" id="sampleChoice"></select>
-        <button v-on:click="playInMultiplayer">Race sample in Multiplayer mode</button>
+        <select id="sampleChoice" style="display:none;"></select>
+        <div id="players">
+        </div>
+        <div id="waitingForHost" style="margin:20px;">
+            Waiting for the host to start the race...
+        </div>
         <pre id="codebackground"></pre>
     </main>
     <footer>
         Made with love from <a href="https://github.com/lines-of-codes/" target="_blank">LinesOfCodes</a>
     </footer>
 </body>
-
 </html>

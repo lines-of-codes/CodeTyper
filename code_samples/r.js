@@ -1,5 +1,10 @@
 samplelist.r = [
     {
+        "name": "Highlighting Information",
+        "mime": "text/x-rsrc",
+        "mode": "r"
+    },
+    {
         "name": "Hello, world",
         "code": `cat("Hello, world!")`
     },

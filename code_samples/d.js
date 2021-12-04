@@ -1,5 +1,10 @@
 samplelist.d = [
     {
+        "name": "Highlighting Information",
+        "mime": "text/x-d",
+        "mode": "d"
+    },
+    {
         "name": "Hello, world",
         "code": `import std.stdio;
 

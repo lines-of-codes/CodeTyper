@@ -1,5 +1,10 @@
 samplelist.c = [
     {
+        "name": "Highlighting Information",
+        "mime": "text/x-csrc",
+        "mode": "clike"
+    },
+    {
         "name": "Hello, world",
         "code": `#include <stdio.h>
 

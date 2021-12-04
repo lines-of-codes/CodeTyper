@@ -10,15 +10,22 @@ body {
 
 header {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 10px 0;
     background: var(--darker-background);
 }
 
-header > * {
-    margin: 0 5px;
+header > div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+header * {
+    margin: 5px;
 }
 
 main {
@@ -29,6 +36,13 @@ select {
     font-family: Poppins, sans-serif;
     border: 1px solid black;
     border-radius: 5px;
+}
+
+button {
+    font-family: Poppins, sans-serif;
+    border: 1px solid black;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 pre {
@@ -47,6 +61,8 @@ footer {
     background: transparent !important;
     font-family: "JetBrains Mono", monospace !important;
     margin: 17px;
+    border: 4px solid black;
+    border-radius: 5px;
 }
 
 .correct {
@@ -60,4 +76,12 @@ footer {
 
 #timer {
     transform: translateX(50%);
+}
+
+#players {
+    margin: 20px;
+}
+
+#playerName {
+    font-weight: bold;
 }

@@ -1,5 +1,10 @@
 samplelist.java = [
     {
+        "name": "Highlighting Information",
+        "mime": "text/x-java",
+        "mode": "clike"
+    },
+    {
         "name": "Hello, world",
         "code": `class Application {
     public static void main(String[] args) {

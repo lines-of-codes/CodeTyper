@@ -1,5 +1,10 @@
 samplelist.perl = [
     {
+        "name": "Highlighting Information",
+        "mime": "text/x-perl",
+        "mode": "perl"
+    },
+    {
         "name": "Hello, world",
         "code": `use strict;
 use warnings;
