@@ -171,7 +171,6 @@ let onCodeInputChange = () => {
             charSpan.classList.remove("correct");
         }
     });
-    onCodeInputChange?.();
     if(value.replaceAll(" ", "").replaceAll("\n", "") === currentCode.replaceAll(" ", "").replaceAll("\n", "")) {
         onTypingCompleted();
     }
