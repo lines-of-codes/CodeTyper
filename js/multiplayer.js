@@ -12,6 +12,7 @@ let raceOwner = false;
 let currentMatchData = null;
 
 codemirror.setOption("readOnly", true);
+multiplayer = true;
 
 function regeneratePlayerElements(data) {
     players.innerHTML = "";
@@ -271,6 +272,8 @@ window.onbeforeunload = () => {
         // If you are the only one in the race, Delete the race.
         if(data.members.length == 1) {
             remove(raceRef);
+        } else {
+            remove(child(raceRef, `members/${memberIndex}`));
         }
     }
 }

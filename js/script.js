@@ -8,6 +8,7 @@ const cps = []; // (Character typed per seconds)
 let characterTypedInSecond = 0;
 let cpsIteration = 0;
 let chartInstance = null;
+let multiplayer = false;
 
 const codemirror = CodeMirror(document.getElementById("maincontent"), {
     autofocus: true
@@ -84,7 +85,8 @@ function onSampleChoiceChange() {
 }
 
 const lastSavedLanguage = localStorage.getItem("lastSavedLanguage") ?? "python";
-changeLanguage(lastSavedLanguage);
+if(!multiplayer) languageChoice.value = lastSavedLanguage;
+changeLanguage(languageChoice.value);
 
 let onTypingCompleted = () => {
     codemirror.setValue("");
