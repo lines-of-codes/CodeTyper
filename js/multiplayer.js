@@ -27,7 +27,7 @@ function regeneratePlayerElements(data) {
         player.appendChild(playerLabel);
         if(v.finishedAt) {
             const finishedAtLabel = document.createElement("span");
-            finishedAtLabel.innerText = "Finished " + v.finishedAt;
+            finishedAtLabel.innerText = `Finished ${v.finishedAt} in ${v.finishedIn} seconds`;
             finishedAtLabel.style.marginLeft = "5px";
             player.appendChild(finishedAtLabel);
         }
@@ -57,8 +57,7 @@ async function createNewRace(userId, displayName) {
                 uid: userId,
                 displayName: displayName,
                 charTyped: 0,
-                owner: true,
-                finishedAt: null
+                owner: true
             }
         ],
         finishedCount: 0
@@ -79,16 +78,18 @@ async function createNewRace(userId, displayName) {
     });
     sampleChoice = { value: sessionStorage.getItem("sample") };
     changeLanguage(sessionStorage.getItem("language"));
-    showModal("Race created", `The ID of the race is 
+    showModal("Race created", `The link to the race is 
     <pre>
-        ${raceRef.key}
+        https://codetyper.linesofcodes.repl.co/multiplayer.html?joinCode=${raceRef.key}
         <span class="material-icons" id="copyMultiplayerKey" title="Click to copy">
             content_copy
         </span>
     </pre>
-    You can invite your friend to the race with that ID.`, []);
-    document.getElementById("copyMultiplayerKey").addEventListener("click", () => {
-        navigator.clipboard.writeText(raceRef.key);
+    You can invite your friend to the race with that link.`, []);
+    const copyMultiplayerKey = document.getElementById("copyMultiplayerKey");
+    copyMultiplayerKey.style.cursor = "pointer";
+    copyMultiplayerKey.addEventListener("click", () => {
+        navigator.clipboard.writeText("https://codetyper.linesofcodes.repl.co/multiplayer.html?joinCode=" + raceRef.key);
     });
     const pageHeader = document.getElementById("pageHeader");
     const container = document.createElement("div");
@@ -131,8 +132,7 @@ onCodeInputChange = () => {
     });
 }
 
-async function joinARace(userId, displayName) {
-    const raceKey = prompt("Please enter race key");
+async function joinARace(userId, displayName, raceKey) {
     try {
         raceRef = child(ref(db), raceKey);
         let raceData = await get(raceRef);
@@ -140,20 +140,22 @@ async function joinARace(userId, displayName) {
         if(raceData == null) {
             alert("Oops... Seems like that race didn't exist...");
         }
+        memberIndex = Object.keys(raceData.members).length;
+        Object.keys(raceData.members).forEach(i => {
+            const v = raceData.members[i];
+            if(v.uid == userId) {
+                memberIndex = i;
+            }
+        });
         sampleChoice = { value: raceData.sample };
         changeLanguage(raceData.language);
-        memberIndex = Object.keys(raceData.members).length;
         update(child(raceRef, "members/" + memberIndex.toString()), {
             uid: userId,
             displayName: displayName,
             charTyped: 0,
             owner: false,
             finishedAt: null
-        })
-        unsubscribeFunctions.push(onValue(child(raceRef, "members"), (snapshot) => {
-            const data = snapshot.val();
-            regeneratePlayerElements(data);
-        }));
+        });
         unsubscribeFunctions.push(onValue(raceRef, (snapshot) => {
             const data = snapshot.val();
             if(data.started && !isStarted) {
@@ -173,8 +175,15 @@ async function joinARace(userId, displayName) {
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        if(sessionStorage.getItem("host")) createNewRace(user.uid, user.displayName);
-        else joinARace(user.uid, user.displayName);
+        let parameters = new URLSearchParams(window.location.search);
+        let joinCode = parameters.get("joinCode");
+        if(sessionStorage.getItem("host") && joinCode == null) createNewRace(user.uid, user.displayName);
+        else {
+            if(joinCode == null) {
+                joinCode = prompt("Please enter race key");
+            }
+            joinARace(user.uid, user.displayName, joinCode);
+        }
     } else {
         window.location.href = "auth.html";
     }
@@ -261,16 +270,17 @@ onTypingCompleted = () => {
         finishedCount: currentMatchData.finishedCount + 1
     });
     update(child(raceRef, `members/${memberIndex}`), {
-        finishedAt: generateFinishedAt(currentMatchData.finishedCount)
+        finishedAt: generateFinishedAt(currentMatchData.finishedCount),
+        finishedIn: timer.innerText
     });
 }
 
 window.onbeforeunload = () => {
     unsubscribeFunctions.forEach(i => i());
     const data = currentMatchData;
-    if(raceRef && data.exists()) {
+    if(raceRef && data) {
         // If you are the only one in the race, Delete the race.
-        if(data.members.length == 1) {
+        if(Object.keys(data.members).length == 1) {
             remove(raceRef);
         } else {
             remove(child(raceRef, `members/${memberIndex}`));

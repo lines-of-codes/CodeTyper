@@ -42,5 +42,17 @@ class Application {
         myReader.close();
     }
 }`
+    },
+    {
+        "name": "Roll the dice!",
+        "code": `import java.util.concurrent.ThreadLocalRandom;
+
+class Application {
+    public static void main(String[] args) {
+        System.out.println("Rolling the dice...");
+        int randomNum = ThreadLocalRandom.current().nextInt(1, 7);
+        System.out.printf("You got: %d", randomNum);
+    }
+}`
     }
 ]

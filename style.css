@@ -3,9 +3,14 @@
 }
 
 body {
+    --background: white;
     --darker-background: lightgray;
+    --font-color: black;
+    background: var(--background);
+    color: var(--font-color);
     font-family: Poppins, sans-serif;
     margin: 0;
+    overflow-x: hidden;
 }
 
 header {
@@ -34,13 +39,17 @@ main {
 
 select {
     font-family: Poppins, sans-serif;
-    border: 1px solid black;
+    border: 1px solid var(--font-color);
     border-radius: 5px;
+    background: var(--darker-background);
+    color: var(--font-color);
 }
 
 button {
     font-family: Poppins, sans-serif;
-    border: 1px solid black;
+    border: 1px solid var(--font-color);
+    background: var(--darker-background);
+    color: var(--font-color);
     border-radius: 5px;
     cursor: pointer;
 }
@@ -61,7 +70,7 @@ footer {
     background: transparent !important;
     font-family: "JetBrains Mono", monospace !important;
     margin: 17px;
-    border: 4px solid black;
+    border: 4px solid var(--font-color) !important;
     border-radius: 5px;
 }
 
@@ -84,4 +93,12 @@ footer {
 
 #playerName {
     font-weight: bold;
+}
+
+.modal {
+    z-index: 2 !important;
+}
+
+a {
+    color: var(--font-color);
 }

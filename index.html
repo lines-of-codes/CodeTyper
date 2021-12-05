@@ -34,6 +34,7 @@
     <script src="https://yetanotherwebsitedesigner.linesofcodes.repl.co/js/modal.js" defer></script>
     <script src="https://unpkg.com/petite-vue" defer init></script>
     <script defer src="js/script.js"></script>
+    <script defer src="js/themes.js"></script>
     <script defer src="js/navbar.js" type="module"></script>
 </head>
 
@@ -70,6 +71,18 @@
         <pre id="codebackground"></pre>
     </main>
     <footer>
+        <div class="themeSelector">
+            <span>Themes: </span>
+            <select id="themeOption">
+                <option value="default">Default Light</option>
+                <option value="monokai">Monokai</option>
+                <option value="monokai vibrant">Monokai Vibrant</option>
+                <option value="dracula">Dracula</option>
+                <option value="blackboard">Blackboard</option>
+                <option value="solarized light">Solarized Light</option>
+                <option value="solarized dark">Solarized Dark</option>
+            </select>
+        </div>
         Made with love from <a href="https://github.com/lines-of-codes/" target="_blank">LinesOfCodes</a>
     </footer>
 </body>

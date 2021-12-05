@@ -11,7 +11,8 @@ let chartInstance = null;
 let multiplayer = false;
 
 const codemirror = CodeMirror(document.getElementById("maincontent"), {
-    autofocus: true
+    autofocus: true,
+    indentUnit: 4
 });
 
 function changeLanguage(language = languageChoice.value) {
@@ -176,7 +177,7 @@ let onCodeInputChange = () => {
     }
 }
 
-codemirror.on("change", onCodeInputChange);
+window.onload = () => codemirror.on("change", onCodeInputChange);
 
 function playInMultiplayer() {
     sessionStorage.setItem("language", languageChoice.value);

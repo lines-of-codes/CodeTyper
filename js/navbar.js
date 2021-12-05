@@ -13,7 +13,7 @@ onAuthStateChanged(auth, (user) => {
         updateDisplayName.onclick = () => {
             const newDisplayName = prompt("Please enter your new display name...");
             if(!newDisplayName) return;
-            updateProfile(auth, {
+            updateProfile(user, {
                 displayName: newDisplayName
             });
         };
@@ -21,7 +21,7 @@ onAuthStateChanged(auth, (user) => {
         container.appendChild(updateDisplayName);
         const signOutBtn = document.createElement("button");
         signOutBtn.onclick = () => {
-            signOut();
+            signOut(auth);
         };
         signOutBtn.innerText = "Log out";
         container.appendChild(signOutBtn);
