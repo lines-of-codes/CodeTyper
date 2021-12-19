@@ -84,7 +84,9 @@ footer {
 }
 
 #timer {
-    transform: translateX(50%);
+    display: flex;
+    align-content: center;
+    justify-content: center;
 }
 
 #players {
@@ -101,4 +103,16 @@ footer {
 
 a {
     color: var(--font-color);
+}
+
+input {
+    font-family: Poppins, sans-serif;
+    border-radius: 5px;
+    border: 1px solid var(--font-color);
+    background: var(--darker-background);
+    color: var(--font-color);
+}
+
+.copyButton {
+    cursor: pointer;
 }

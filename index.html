@@ -63,7 +63,6 @@
             <option value="ruby">Ruby</option>
             <option value="rust">Rust</option>
             <option value="storyscript">StoryScript</option>
-            <option value="ts">TypeScript</option>
             <option value="cobol">Cobol</option>
         </select>
         <select v-on:change="onSampleChoiceChange" id="sampleChoice"></select>
@@ -81,7 +80,9 @@
                 <option value="blackboard">Blackboard</option>
                 <option value="solarized light">Solarized Light</option>
                 <option value="solarized dark">Solarized Dark</option>
+                <option value="custom">Your Custom Theme</option>
             </select>
+            <button onclick="window.location.href = 'customTheme.html'">Create your own theme</button>
         </div>
         Made with love from <a href="https://github.com/lines-of-codes/" target="_blank">LinesOfCodes</a>
     </footer>

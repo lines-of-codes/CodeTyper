@@ -1,5 +1,6 @@
+"use strict";
 import { app, auth } from "./firebase.js";
-import { onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/9.5.0/firebase-auth.js";
+import { onAuthStateChanged, updateProfile, signInAnonymously } from "https://www.gstatic.com/firebasejs/9.5.0/firebase-auth.js";
 import { getDatabase, push, ref, get, update, child, remove, onValue } from "https://www.gstatic.com/firebasejs/9.5.0/firebase-database.js";
 
 const players = document.getElementById("players");
@@ -13,6 +14,12 @@ let currentMatchData = null;
 
 codemirror.setOption("readOnly", true);
 multiplayer = true;
+
+if(!("Notification" in window)) {
+    alert("This browser didn't support desktop notification :(");
+} else if(Notification.permission !== "denied" && Notification.permission !== "granted") {
+    Notification.requestPermission();
+}
 
 function regeneratePlayerElements(data) {
     players.innerHTML = "";
@@ -41,10 +48,10 @@ function regeneratePlayerElements(data) {
     });
 }
 
-async function createNewRace(userId, displayName) {
+async function createNewRace(userId, displayName, user) {
     if(displayName == null) {
         displayName = prompt("You need a Display name to be able to join races. Please enter your new display name.");
-        await updateProfile({
+        await updateProfile(user, {
             displayName: displayName
         });
     }
@@ -71,11 +78,11 @@ async function createNewRace(userId, displayName) {
     ]);
     raceOwner = true;
     memberIndex = 0;
-    onValue(raceRef, (snapshot) => {
+    unsubscribeFunctions.push(onValue(raceRef, (snapshot) => {
         const data = snapshot.val();
         regeneratePlayerElements(data.members);
         currentMatchData = data;
-    });
+    }));
     sampleChoice = { value: sessionStorage.getItem("sample") };
     changeLanguage(sessionStorage.getItem("language"));
     showModal("Race created", `The link to the race is 
@@ -86,6 +93,9 @@ async function createNewRace(userId, displayName) {
         </span>
     </pre>
     You can invite your friend to the race with that link.`, []);
+    const modal = document.getElementsByClassName("modal")[0];
+    modal.style.setProperty("--background", themeInfos[localStorage.getItem("theme") ?? "default"].background);
+    modal.style.setProperty("--darker-background", themeInfos[localStorage.getItem("theme") ?? "default"].darkerBackground);
     const copyMultiplayerKey = document.getElementById("copyMultiplayerKey");
     copyMultiplayerKey.style.cursor = "pointer";
     copyMultiplayerKey.addEventListener("click", () => {
@@ -108,6 +118,8 @@ async function createNewRace(userId, displayName) {
     pageHeader.appendChild(container);
 }
 
+let isCompleted = false;
+
 onCodeInputChange = () => {
     characterTypedInSecond += 1;
     const value = codemirror.getValue().replaceAll("\t", "    ");
@@ -124,7 +136,7 @@ onCodeInputChange = () => {
             charSpan.classList.remove("correct");
         }
     });
-    if(value.replaceAll(" ", "").replaceAll("\n", "") === currentCode.replaceAll(" ", "").replaceAll("\n", "")) {
+    if(value.replaceAll(" ", "").replaceAll("\n", "") === currentCode.replaceAll(" ", "").replaceAll("\n", "") && !isCompleted) {
         onTypingCompleted();
     }
     update(child(raceRef, `members/${memberIndex}`), {
@@ -132,13 +144,20 @@ onCodeInputChange = () => {
     });
 }
 
-async function joinARace(userId, displayName, raceKey) {
+async function joinARace(userId, displayName, raceKey, user) {
     try {
+        if(displayName == null) {
+            displayName = prompt("You need a Display name to be able to join races. Please enter your new display name.");
+            await updateProfile(user, {
+                displayName: displayName
+            });
+        }
         raceRef = child(ref(db), raceKey);
         let raceData = await get(raceRef);
         raceData = raceData.val();
         if(raceData == null) {
             alert("Oops... Seems like that race didn't exist...");
+            window.location.href = "/";
         }
         memberIndex = Object.keys(raceData.members).length;
         Object.keys(raceData.members).forEach(i => {
@@ -153,8 +172,7 @@ async function joinARace(userId, displayName, raceKey) {
             uid: userId,
             displayName: displayName,
             charTyped: 0,
-            owner: false,
-            finishedAt: null
+            owner: false
         });
         unsubscribeFunctions.push(onValue(raceRef, (snapshot) => {
             const data = snapshot.val();
@@ -163,9 +181,10 @@ async function joinARace(userId, displayName, raceKey) {
                 document.getElementById("waitingForHost")?.remove();
                 startTimer();
                 isStarted = true;
+                new Notification("The race is starting...");
             }
-            currentMatchData = data;
             regeneratePlayerElements(data.members);
+            currentMatchData = data;
         }));
     } catch(err) {
         alert("Oops! An error occurred. :/\nDeveloper tips: The error is being printed out to console.");
@@ -177,15 +196,19 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
         let parameters = new URLSearchParams(window.location.search);
         let joinCode = parameters.get("joinCode");
-        if(sessionStorage.getItem("host") && joinCode == null) createNewRace(user.uid, user.displayName);
+        if(sessionStorage.getItem("host") && joinCode == null) createNewRace(user.uid, user.displayName, user);
         else {
             if(joinCode == null) {
                 joinCode = prompt("Please enter race key");
             }
-            joinARace(user.uid, user.displayName, joinCode);
+            joinARace(user.uid, user.displayName, joinCode, user);
         }
     } else {
-        window.location.href = "auth.html";
+        if(confirm("Seems like you don't have an account... Do you want to continue as a guest?")) {
+            signInAnonymously(auth);
+        } else {
+            window.location.href = "auth.html";
+        }
     }
 });
 
@@ -233,11 +256,26 @@ onTypingCompleted = () => {
         return total + num;
     });
     let avg = sum / chartData.length;
-    showModal("You made it!", `<p>You've completed the code typing in ${timer.innerText} seconds!<br>
-    <canvas id="cps"></canvas><br>
+    showModal("You made it!", `<p>
+    You've completed the code typing in ${timer.innerText} seconds!<br>
+    <canvas id="cps"></canvas><br> 
+    <details>
+    <summary>More Information</summary>
     Average <abbr title="Characters per second">CPS</abbr>/<abbr title="Characters per minute">CPM</abbr>/<abbr title="Words per minute">WPM</abbr>: ${avg}/${avg * 60}/${(avg * 60) / 5}<br>
-    <button onclick="window.location.href = '/'">Go back home</button>
-</p>`, []);
+    Peak <abbr title="Characters per second">CPS</abbr>/<abbr title="Characters per minute">CPM</abbr>/<abbr title="Words per minute">WPM</abbr>: ${Math.max(...chartData)}/${Math.max(...cpmData)}/${Math.max(...wpmData)}<br>
+    Lowest <abbr title="Characters per second">CPS</abbr>/<abbr title="Characters per minute">CPM</abbr>/<abbr title="Words per minute">WPM</abbr>: ${Math.min(...chartData)}/${Math.min(...cpmData)}/${Math.min(...wpmData)}
+    </details>
+</p>`, [
+    {
+        label: "Go back home",
+        onClick: () => {
+            window.location.href = "/";
+        }
+    }
+], () => { chartInstance.destroy(); });
+    const modal = document.getElementsByClassName("modal")[0];
+    modal.style.setProperty("--background", themeInfos[localStorage.getItem("theme") ?? "default"].background);
+    modal.style.setProperty("--darker-background", themeInfos[localStorage.getItem("theme") ?? "default"].darkerBackground);
     chartInstance = new Chart(
         document.getElementById("cps"),
         {
@@ -273,6 +311,7 @@ onTypingCompleted = () => {
         finishedAt: generateFinishedAt(currentMatchData.finishedCount),
         finishedIn: timer.innerText
     });
+    isCompleted = true;
 }
 
 window.onbeforeunload = () => {

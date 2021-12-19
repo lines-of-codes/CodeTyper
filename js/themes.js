@@ -1,3 +1,4 @@
+"use strict";
 const themeInfos = {
     "default": {
         background: "white",
@@ -43,14 +44,23 @@ const themeInfos = {
     }
 };
 
+if(localStorage.getItem("customTheme")) {
+    themeInfos["custom"] = JSON.parse(localStorage.getItem("customTheme"));
+}
+
+const linkedThemes = [];
+
 async function setTheme(themeName) {
     if(themeInfos[themeName] && themeName != "default") {
         let theme = themeInfos[themeName];
         
-        const cmTheme = document.createElement("link");
-        cmTheme.rel = "stylesheet";
-        cmTheme.href = `https://unpkg.com/codemirror@5.63.3/theme/${theme.cssFile}.css`;
-        document.head.appendChild(cmTheme);
+        if(theme.cssFile != "default" && linkedThemes.indexOf(themeName) == -1) {
+            const cmTheme = document.createElement("link");
+            cmTheme.rel = "stylesheet";
+            cmTheme.href = `https://unpkg.com/codemirror@5.63.3/theme/${theme.cssFile}.css`;
+            document.head.appendChild(cmTheme);
+            linkedThemes.push(themeName);
+        }
 
         codemirror?.setOption("theme", theme.codeMirrorName ?? themeName);
         localStorage.setItem("theme", themeName);
@@ -66,10 +76,18 @@ async function setTheme(themeName) {
     }
 }
 
-setTheme(localStorage.getItem("theme"));
+onWindowLoad.push(() => {
+    if(localStorage.getItem("custom")) {
+        themeInfos.custom = JSON.parse(localStorage.getItem("custom"));
+    }
 
-const themeSelector = document.getElementById("themeOption");
-themeSelector.value = localStorage.getItem("theme") ?? "default";
-themeSelector.addEventListener("change", (e) => {
-    setTheme(e.target.value);
+    setTheme(localStorage.getItem("theme"));
+
+    const themeSelector = document.getElementById("themeOption");
+    if(themeSelector) {
+        themeSelector.value = localStorage.getItem("theme") ?? "default";
+        themeSelector.addEventListener("change", (e) => {
+            setTheme(e.target.value);
+        });
+    }
 });

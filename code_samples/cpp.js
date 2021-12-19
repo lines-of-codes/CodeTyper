@@ -53,5 +53,16 @@ int main() {
     std::cout << (rand() % 6 + 1) << std::endl;
     return 0;
 }`
+    },
+    {
+        "name": "Count from 1 to 10!",
+        "code": `#include <iostream>
+
+int main() {
+    for(int i = 1; i < 11; i++) {
+        std::cout << i << '\n';
+    }
+    return 0;
+}`
     }
 ]

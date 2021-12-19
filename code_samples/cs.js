@@ -59,5 +59,20 @@ public class Application
         Console.WriteLine($"You got: {new Random().Next(1, 7)}");
     }
 }`
+    },
+    {
+        "name": "Count from 1 to 10!",
+        "code": `using System;
+
+public class Application
+{
+    public static void Main(string[] args)
+    {
+        for(int i = 1; i < 11; i++)
+        {
+            Console.WriteLine(i);
+        }
+    }
+}`
     }
 ]

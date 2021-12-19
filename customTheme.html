@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Poppins&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/petite-vue" defer init></script>
+    <link rel="stylesheet" href="https://unpkg.com/codemirror@5.63.3/lib/codemirror.css">
+    <script src="https://unpkg.com/codemirror@5.63.3/lib/codemirror.js"></script>
+    <script src="https://unpkg.com/codemirror@5.63.3/mode/clike/clike.js"></script>
+    <link rel="stylesheet" href="https://yetanotherwebsitedesigner.linesofcodes.repl.co/modal.css">
+    <script src="https://yetanotherwebsitedesigner.linesofcodes.repl.co/js/modal.js" defer></script>
+    <script defer src="js/themes.js"></script>
+    <script defer src="js/themeCreator.js"></script>
+    <title>Create Your Theme - CodeTyper</title>
+    <meta name="title" content="Create Your Theme - CodeTyper">
+    <meta name="description" content="CodeTyper! A small and simple web application to measures how fast can you type code.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://codetyper.linesofcodes.repl.co/">
+    <meta property="og:title" content="Create Your Theme - CodeTyper">
+    <meta property="og:description" content="CodeTyper! A small and simple web application to measures how fast can you type code.">
+    <meta property="og:image" content="">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://codetyper.linesofcodes.repl.co/">
+    <meta property="twitter:title" content="Create Your Theme - CodeTyper">
+    <meta property="twitter:description" content="CodeTyper! A small and simple web application to measures how fast can you type code.">
+    <meta property="twitter:image" content="">
+    <style>
+        input { width: 7rem; }
+        main { min-height: 88.5vh; }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Theme Creator</h1>
+        <div id="codecontainer">
+            CodeMirror preview:
+        </div>
+        <pre>{
+    "background": <input type="text" v-on:change="onBackgroundChange" value="white" id="background">,
+    "darkerBackground": <input type="text" value="whitesmoke" v-on:change="onDarkerBackgroundChange" id="darkerBackground">,
+    "fontColor": <input type="text" value="black" id="fontColor" v-on:change="onFontColorChange">,
+    <span title="The theme of the code editor.">"codeMirrorName"</span>: <select v-on:change="onCodeMirrorThemeChange" id="codeMirrorName">
+        <option value="default">Default Light</option>
+        <option value="monokai">Monokai</option>
+        <option value="dracula">Dracula</option>
+        <option value="blackboard">Blackboard</option>
+        <option value="solarized light|solarized">Solarized Light</option>
+        <option value="solarized dark|solarized">Solarized Dark</option>
+    </select>
+}</pre>
+        <span>Note: CSS color names are allowed, CSS color functions such as rgb() or hsl() is allowed too.</span><br>
+        <button v-on:click="importTheme()">Import</button>
+        <button v-on:click="exportTheme()">Export</button>
+        <button v-on:click="window.location.href = '/'">Go back</button>
+    </main>
+    <footer>
+        Made with love from <a href="https://github.com/lines-of-codes/" target="_blank">LinesOfCodes</a>
+    </footer>
+</body>
+</html>

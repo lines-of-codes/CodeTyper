@@ -1,3 +1,4 @@
+"use strict";
 import { auth } from "./firebase.js";
 import { onAuthStateChanged, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/9.5.0/firebase-auth.js";
 

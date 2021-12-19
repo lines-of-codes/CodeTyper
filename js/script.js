@@ -1,3 +1,4 @@
+"use strict";
 let sampleChoice = document.getElementById("sampleChoice");
 let languageChoice = document.getElementById("language");
 const codebackground = document.getElementById("codebackground");
@@ -9,6 +10,7 @@ let characterTypedInSecond = 0;
 let cpsIteration = 0;
 let chartInstance = null;
 let multiplayer = false;
+let onWindowLoad = [];
 
 const codemirror = CodeMirror(document.getElementById("maincontent"), {
     autofocus: true,
@@ -25,7 +27,7 @@ function changeLanguage(language = languageChoice.value) {
         sampleChoice.innerHTML = "";
         samples.forEach(i => {
             if(i.name == "Highlighting Information") {
-                console.log("Syntax highlighting information found!")
+                console.log("Syntax highlighting information found!");
                 syntaxHighlightingInformation = i;
             } else {
                 sampleChoice.innerHTML += `<option value="${i.name}">${i.name}</option>`;
@@ -83,6 +85,8 @@ function onSampleChoiceChange() {
     isStarted = false;
     clearInterval(timerRunnerId);
     timer.innerText = 0;
+    cps.splice(0, cps.length);
+    cpsIteration = 0;
 }
 
 const lastSavedLanguage = localStorage.getItem("lastSavedLanguage") ?? "python";
@@ -111,9 +115,6 @@ let onTypingCompleted = () => {
         cpmData.push(characterTypedInSecond * 60);
         wpmData.push((characterTypedInSecond * 60) / 5);
     }
-    console.log(chartData);
-    console.log(cps);
-    console.log(cpsIteration);
     cps.splice(0, cps.length);
     cpsIteration = 0;
     characterTypedInSecond = 0;
@@ -121,7 +122,17 @@ let onTypingCompleted = () => {
         return total + num;
     });
     let avg = sum / chartData.length;
-    showModal("You made it!", `<p>You've completed the code typing in ${timer.innerText} seconds!<br><canvas id="cps"></canvas><br>Average <abbr title="Characters per second">CPS</abbr>/<abbr title="Characters per minute">CPM</abbr>/<abbr title="Words per minute">WPM</abbr>: ${avg}/${avg * 60}/${(avg * 60) / 5}<br>Sum of the chart data (Helps measuring how accurate is the chart): ${sum} of ${currentCode.length}</p>`, [], () => { chartInstance.destroy(); });
+    showModal("You made it!", `<p>You've completed the code typing in ${timer.innerText} seconds!<br><canvas id="cps"></canvas><br> 
+    <details>
+    <summary>More Information</summary>
+    Average <abbr title="Characters per second">CPS</abbr>/<abbr title="Characters per minute">CPM</abbr>/<abbr title="Words per minute">WPM</abbr>: ${avg}/${avg * 60}/${(avg * 60) / 5}<br>
+    Peak <abbr title="Characters per second">CPS</abbr>/<abbr title="Characters per minute">CPM</abbr>/<abbr title="Words per minute">WPM</abbr>: ${Math.max(...chartData)}/${Math.max(...cpmData)}/${Math.max(...wpmData)}<br>
+    Lowest <abbr title="Characters per second">CPS</abbr>/<abbr title="Characters per minute">CPM</abbr>/<abbr title="Words per minute">WPM</abbr>: ${Math.min(...chartData)}/${Math.min(...cpmData)}/${Math.min(...wpmData)}
+    </details>
+</p>`, [], () => { chartInstance.destroy(); });
+    const modal = document.getElementsByClassName("modal")[0];
+    modal.style.setProperty("--background", themeInfos[localStorage.getItem("theme") ?? "default"].background);
+    modal.style.setProperty("--darker-background", themeInfos[localStorage.getItem("theme") ?? "default"].darkerBackground);
     chartInstance = new Chart(
         document.getElementById("cps"),
         {
@@ -164,7 +175,7 @@ let onCodeInputChange = () => {
         if(char == null) {
             charSpan.classList.remove("correct");
             charSpan.classList.remove("incorrect");
-        } else if(char === charSpan.innerText || char === " " || char === "\n") {
+        } else if(char === " " || char === "\n" || char === charSpan.innerText) {
             charSpan.classList.add("correct");
             charSpan.classList.remove("incorrect");
         } else {
@@ -177,7 +188,10 @@ let onCodeInputChange = () => {
     }
 }
 
-window.onload = () => codemirror.on("change", onCodeInputChange);
+window.onload = () => {
+    codemirror.on("change", onCodeInputChange);
+    onWindowLoad.forEach(i => i());
+}
 
 function playInMultiplayer() {
     sessionStorage.setItem("language", languageChoice.value);

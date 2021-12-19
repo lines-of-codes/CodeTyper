@@ -24,5 +24,10 @@ print(f"Hello, {name}!")`
 
 print("Rolling the dice...")
 print(f"You got: {random.randint(1, 6)}")`
+    },
+    {
+        "name": "Count from 1 to 10!",
+        "code": `for i in range(1, 11):
+    print(i)`
     }
 ];

@@ -11,8 +11,13 @@
 	<script src="https://www.gstatic.com/firebasejs/ui/6.0.0/firebase-ui-auth.js">
 	</script>
 	<link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.0.0/firebase-ui-auth.css" />
+    <link rel="stylesheet" href="style.css">
+    <script defer src="js/themes.js"></script>
 	<title>Login/Register - CodeTyper</title>
 	<script>
+        const onWindowLoad = [];
+        const codemirror = null;
+        window.onload = () => { onWindowLoad.forEach(i => i()) };
         firebase.initializeApp({
             apiKey: "AIzaSyAb3aCYlSfYMF4rH3x4SNwi1Hp5Jvh6n9U",
             authDomain: "codetyper-uwu.firebaseapp.com",
@@ -23,7 +28,7 @@
             appId: "1:120744853478:web:9e566db9e744cad23d2027",
             measurementId: "G-0VCXM6J7S8"
         });
-		let uiConfig = {
+		const uiConfig = {
             credentialHelper: firebaseui.auth.CredentialHelper.NONE,
             signInSuccessUrl: '/',
             signInOptions: [
@@ -43,16 +48,44 @@
             immediateFederatedRedirect: false
         };
 
-        let ui = new firebaseui.auth.AuthUI(firebase.auth());
+        const ui = new firebaseui.auth.AuthUI(firebase.auth());
         // The start method will wait until the DOM is loaded.
         ui.start('#firebaseui-auth-container', uiConfig);
 	</script>
-    <style>body { margin: 20px; }</style>
+    <style>
+    body {
+        font-family: Roboto, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        flex-direction: column;
+        align-items: center;
+        margin: 20px;
+    }
+    select { font-family: Roboto, sans-serif; }
+    </style>
 </head>
 
 <body>
     <h2>Login/Register</h2>
     <div id="firebaseui-auth-container"></div>
+    <br>
+    <footer>
+        <div class="themeSelector">
+            <span>Themes: </span>
+            <select id="themeOption">
+                <option value="default">Default Light</option>
+                <option value="monokai">Monokai</option>
+                <option value="monokai vibrant">Monokai Vibrant</option>
+                <option value="dracula">Dracular</option>
+                <option value="blackboard">Blackboard</option>
+                <option value="solarized light">Solarized Light</option>
+                <option value="solarized dark">Solarized Dark</option>
+                <option value="custom">Your Custom Theme</option>
+            </select>
+        </div>
+        Made with love from <a href="https://github.com/lines-of-codes/" target="_blank">LinesOfCodes</a>
+    </footer>
 </body>
 
 </html>
